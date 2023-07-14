@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=1920px, initial-scale=1.0">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <title>Document</title>
+    <style>
+        .main {
+            width: 80%;
+            margin: 5%;
+            padding: 5%;
+            height: 50px;
+            background-color: aliceblue;
+        }
+
+        .fade-out {
+            animation-name: fadeOut;
+            animation-duration: 1s;
+            animation-fill-mode: forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <form style="text-align:center">
+            <label for="">Task</label>
+            <input type="text" placeholder="Enter a task" id="task">
+            <input type="button" value="Add" id="btn" onclick="assign()">
+        </form>
+    </div>
+    <div style="background-color:tomato; color: white; padding:5%; margin:5%; height: 80px;">
+        <table style="width: 100%;">
+            <tr>
+                <th style="width: 25%;">Active/Pending</th>
+                <th style="width: 25%;">Tasks</th>
+                <th style="width: 25%;">Edit</th>
+                <th style="width: 25%;">Delete</th>
+                <tbody id="display" style="text-align: center;"></tbody>
+            </tr>
+        </table>
+    </div>
+</body>
+<script>
+    const ar = [];
+    document.getElementById('task').addEventListener('keydown', function (event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            document.getElementById('btn').click();
+        }
+    });
+
+    const assign = () => {
+        document.getElementById('btn').value = "Add";
+        const todo = document.getElementById('task').value;
+        ar.push(todo);
+        document.getElementById('task').value = '';
+        view();
+    }
+
+    const view = () => {
+        document.getElementById('display').innerHTML = "";
+        i = 0;
+        while (i < ar.length) {
+            document.getElementById("display").innerHTML = document.getElementById('display').innerHTML += "<tr><td><input type='checkbox' onclick='deleteTaskData(" + i + ")'></td><td>" + ar[i] + "</td><td><input type='button' value='edit' onclick='edit(" + i + ")'></td><td><input type='button' value='delete' onclick='deleteTask(" + i + ")'></td></tr>";
+            i++;
+        }
+    }
+
+    const deleteTask = (key) => {
+        ar.splice(key, 1);
+        view();
+    }
+
+    const deleteTaskData = (key) => {
+        const row = document.getElementById('display').getElementsByTagName('tr')[key];
+        row.classList.add('fade-out');
+        setTimeout(() => {
+            ar.splice(key, 1);
+            view();
+        }, 1000);
+    };
+
+    const edit = (key) => {
+        if (document.getElementById('btn').value == 'Add') {
+            document.getElementById('btn').value = "Update";
+        }
+        else {
+            document.getElementById('btn').value = "Add";
+        }
+        document.getElementById('task').value = ar[key];
+        ar.splice(key, 1);
+        view();
+    }
+</script>
+
+</html>
